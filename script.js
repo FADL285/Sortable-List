@@ -27,6 +27,8 @@ function shuffle(array) {
 
 // creat List items & insert them into DOM
 
+createList();
+
 function createList() {
   const items = document.createDocumentFragment();
   for (const [index, person] of shuffle(richestPeople).entries()) {
@@ -48,6 +50,62 @@ function createList() {
   }
 
   draggableList.appendChild(items);
+
+  addEventListeners();
 }
 
-createList();
+// Event Listeners
+function addEventListeners() {
+  const draggables = document.querySelectorAll('.draggable');
+  const dragListItems = document.querySelectorAll('.draggable-list li');
+
+  draggables.forEach((draggable) => {
+    draggable.addEventListener('dragstart', dragStart);
+  });
+
+  dragListItems.forEach((item) => {
+    item.addEventListener('dragover', dragOver);
+    item.addEventListener('drop', dragDrop);
+    item.addEventListener('dragenter', dragEnter);
+    item.addEventListener('dragleave', dragLeave);
+  });
+}
+
+// Drag Functions
+function dragStart() {
+  // console.log('dragStart');
+  dragStartIndex = +this.closest('li').getAttribute('data-index');
+  // console.log(dragStartIndex);
+}
+
+function dragEnter() {
+  // console.log('dragEnter');
+  this.classList.add('over');
+}
+
+function dragLeave() {
+  // console.log('dragLeave');
+  this.classList.remove('over');
+}
+
+function dragOver(e) {
+  // console.log('dragOver');
+  e.preventDefault();
+}
+
+function dragDrop() {
+  // console.log('dragDrop');
+  const dragEndIndex = +this.getAttribute('data-index');
+
+  swapItems(dragStartIndex, dragEndIndex);
+
+  this.classList.remove('over');
+}
+
+function swapItems(fromIndex, toIndex) {
+  const itemOne = listItems[fromIndex].querySelector('.draggable');
+  const itemTwo = listItems[toIndex].querySelector('.draggable');
+
+  listItems[fromIndex].appendChild(itemTwo);
+  listItems[toIndex].appendChild(itemOne);
+}
