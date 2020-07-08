@@ -18,11 +18,18 @@ const listItems = [];
 
 let dragStartIndex;
 
+// shuffle richest person array
+
+function shuffle(array) {
+  const newArray = [...array];
+  return newArray.sort(() => Math.random() - 0.5);
+}
+
 // creat List items & insert them into DOM
 
 function createList() {
   const items = document.createDocumentFragment();
-  for (const [index, person] of [...richestPeople].entries()) {
+  for (const [index, person] of shuffle(richestPeople).entries()) {
     const listItem = document.createElement('li');
 
     listItem.setAttribute('data-index', index);
